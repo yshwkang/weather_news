@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나의 시작 홈페이지</title>
+<style>
+  :root {
+    --bg-a: #eaf4ff;
+    --bg-b: #f3fbf6;
+    --card-bg: #ffffffcc;
+    --text: #1c1f26;
+    --sub: #6b7280;
+    --accent: #2f7cf6;
+    --accent-2: #22b573;
+    --border: #e5e7eb;
+    --shadow: 0 8px 24px rgba(31, 41, 55, 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg-a: #10151f;
+      --bg-b: #0d1a16;
+      --card-bg: #171c26cc;
+      --text: #e8ebf0;
+      --sub: #99a1ae;
+      --accent: #6ea8ff;
+      --accent-2: #4fd39a;
+      --border: #2a2e37;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(160deg, var(--bg-a) 0%, var(--bg-b) 100%);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+    padding: 56px 20px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  header .clock { color: var(--sub); font-size: 14px; }
+
+  /* 검색창 */
+  .search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 8px 6px 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .search-bar:focus-within {
+    box-shadow: 0 10px 28px rgba(47, 124, 246, 0.18);
+    transform: translateY(-1px);
+  }
+  .search-bar .icon { font-size: 16px; opacity: 0.6; }
+  .search-bar input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 15px;
+    color: var(--text);
+    padding: 10px 0;
+  }
+  .search-bar input::placeholder { color: var(--sub); }
+  .search-bar button {
+    border: none;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+  }
+  .search-bar button:hover { opacity: 0.9; }
+
+  .card {
+    background: var(--card-bg);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .card h2 {
+    font-size: 15px;
+    margin: 0 0 16px;
+    color: var(--sub);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* 날씨 */
+  .weather-item {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .weather-item:first-child { padding-top: 0; }
+  .weather-item:last-child { padding-bottom: 0; border-bottom: none; }
+  .weather-city { font-size: 13px; font-weight: 700; color: var(--accent-2); margin-bottom: 2px; }
+  .weather-temp {
+    font-size: 40px;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .weather-desc { font-size: 16px; color: var(--sub); }
+  .weather-detail { display: flex; gap: 16px; color: var(--sub); font-size: 14px; margin-top: 6px; }
+  .weather-icon { width: 60px; height: 60px; }
+
+  /* 뉴스 */
+  #news-list { list-style: none; margin: 0; padding: 0; }
+  #news-list li { padding: 13px 0; border-bottom: 1px solid var(--border); }
+  #news-list li:last-child { border-bottom: none; }
+  #news-list a { color: var(--text); text-decoration: none; font-size: 15px; font-weight: 500; line-height: 1.4; }
+  #news-list a:hover { color: var(--accent); text-decoration: underline; }
+  #news-list .news-source {
+    color: var(--accent-2);
+    font-size: 11px;
+    font-weight: 700;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  .placeholder { color: var(--sub); font-size: 14px; }
+  .error { color: #e0455a; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>오늘의 시작 홈페이지</h1>
+    <div class="clock" id="clock"></div>
+  </header>
+
+  <form class="search-bar" action="https://search.naver.com/search.naver" method="GET" target="_blank">
+    <span class="icon">🔍</span>
+    <input type="text" name="query" placeholder="네이버 검색" autocomplete="off" autofocus required>
+    <button type="submit">검색</button>
+  </form>
+
+  <section class="card">
+    <h2>🌤 날씨</h2>
+    <div id="weather-list">
+      <div class="placeholder">불러오는 중...</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>📰 주요 뉴스</h2>
+    <ul id="news-list">
+      <li class="placeholder">불러오는 중...</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+// ==========================================================
+// API 키를 아래 두 줄에 입력하세요.
+// 발급 방법은 대화창 안내 또는 하단 주석을 참고하세요.
+// ==========================================================
+const OPENWEATHER_API_KEY = "9fd5918c3d1716cafe270087be6ec04b";
+const NEWSAPI_KEY = "1166beef1aa84f75a093800d1f3cb03d";
+
+const CITIES = [
+  { name: "서울", lat: 37.5665, lon: 126.9780 },
+  { name: "경기 용인시 기흥구", lat: 37.2803, lon: 127.1148 },
+];
+
+// 시계
+function updateClock() {
+  const now = new Date();
+  const opts = { year: "numeric", month: "long", day: "numeric", weekday: "long", hour: "2-digit", minute: "2-digit" };
+  document.getElementById("clock").textContent = now.toLocaleString("ko-KR", opts);
+}
+updateClock();
+setInterval(updateClock, 1000 * 30);
+
+// 날씨
+async function loadWeather() {
+  const el = document.getElementById("weather-list");
+  if (!OPENWEATHER_API_KEY || OPENWEATHER_API_KEY.startsWith("여기에")) {
+    el.innerHTML = `<div class="error">OpenWeatherMap API 키가 설정되지 않았습니다. index.html 상단의 OPENWEATHER_API_KEY 값을 채워주세요.</div>`;
+    return;
+  }
+
+  el.innerHTML = "";
+  for (const city of CITIES) {
+    const block = document.createElement("div");
+    block.className = "weather-item";
+    block.innerHTML = `<div class="placeholder">${city.name} 불러오는 중...</div>`;
+    el.appendChild(block);
+
+    try {
+      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=kr`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`날씨 API 오류 (${res.status})`);
+      const data = await res.json();
+
+      const temp = Math.round(data.main.temp);
+      const feels = Math.round(data.main.feels_like);
+      const desc = data.weather[0].description;
+      const icon = data.weather[0].icon;
+      const humidity = data.main.humidity;
+      const wind = data.wind.speed;
+
+      block.innerHTML = `
+        <img class="weather-icon" src="https://openweathermap.org/img/wn/${icon}@2x.png" alt="${desc}">
+        <div>
+          <div class="weather-city">${city.name}</div>
+          <div class="weather-temp">${temp}°C</div>
+          <div class="weather-desc">${desc} · 체감 ${feels}°C</div>
+          <div class="weather-detail">
+            <span>💧 습도 ${humidity}%</span>
+            <span>💨 풍속 ${wind}m/s</span>
+          </div>
+        </div>
+      `;
+    } catch (err) {
+      block.innerHTML = `<div class="error">${city.name} 날씨를 불러오지 못했습니다: ${err.message}</div>`;
+    }
+  }
+}
+
+// 뉴스
+async function loadNews() {
+  const el = document.getElementById("news-list");
+  const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+
+  // NewsAPI 무료(Developer) 플랜은 브라우저에서의 직접 호출을 localhost에서만 허용한다.
+  // localhost가 아니면(배포 환경) /api/news 서버리스 프록시를 거쳐 CORS 제한을 우회한다.
+  if (isLocal && (!NEWSAPI_KEY || NEWSAPI_KEY.startsWith("여기에"))) {
+    el.innerHTML = `<li class="error">NewsAPI 키가 설정되지 않았습니다. index.html 상단의 NEWSAPI_KEY 값을 채워주세요.</li>`;
+    return;
+  }
+  try {
+    const url = isLocal
+      ? `https://newsapi.org/v2/everything?q=%EC%86%8C%EC%8B%9D&language=ko&sortBy=publishedAt&pageSize=10&apiKey=${NEWSAPI_KEY}`
+      : "/api/news";
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`뉴스 API 오류 (${res.status})`);
+    const data = await res.json();
+
+    if (!data.articles || data.articles.length === 0) {
+      el.innerHTML = `<li class="placeholder">표시할 뉴스가 없습니다.</li>`;
+      return;
+    }
+
+    el.innerHTML = data.articles.map(a => `
+      <li>
+        <a href="${a.url}" target="_blank" rel="noopener noreferrer">${a.title}</a>
+        <span class="news-source">${a.source?.name ?? ""}</span>
+      </li>
+    `).join("");
+  } catch (err) {
+    el.innerHTML = `<li class="error">뉴스를 불러오지 못했습니다: ${err.message}</li>`;
+  }
+}
+
+loadWeather();
+loadNews();
+</script>
+</body>
+</html>
