@@ -185,12 +185,8 @@
 </div>
 
 <script>
-// ==========================================================
-// API 키를 아래 두 줄에 입력하세요.
-// 발급 방법은 대화창 안내 또는 하단 주석을 참고하세요.
-// ==========================================================
-const OPENWEATHER_API_KEY = "9b090935fd2de3f38bab5de942cb918c";
-const NEWSAPI_KEY = "1166beef1aa84f75a093800d1f3cb03d";
+// API 키는 클라이언트 코드에 두지 않는다. /api/weather, /api/news 서버리스
+// 함수가 Vercel 환경변수(OPENWEATHER_API_KEY, NEWSAPI_KEY)로 프록시한다.
 
 const CITIES = [
   { name: "서울", lat: 37.5665, lon: 126.9780 },
@@ -209,11 +205,6 @@ setInterval(updateClock, 1000 * 30);
 // 날씨
 async function loadWeather() {
   const el = document.getElementById("weather-list");
-  if (!OPENWEATHER_API_KEY || OPENWEATHER_API_KEY.startsWith("여기에")) {
-    el.innerHTML = `<div class="error">OpenWeatherMap API 키가 설정되지 않았습니다. index.html 상단의 OPENWEATHER_API_KEY 값을 채워주세요.</div>`;
-    return;
-  }
-
   el.innerHTML = "";
   for (const city of CITIES) {
     const block = document.createElement("div");
@@ -222,7 +213,7 @@ async function loadWeather() {
     el.appendChild(block);
 
     try {
-      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${city.lat}&lon=${city.lon}&appid=${OPENWEATHER_API_KEY}&units=metric&lang=kr`;
+      const url = `/api/weather?lat=${city.lat}&lon=${city.lon}`;
       const res = await fetch(url);
       if (!res.ok) throw new Error(`날씨 API 오류 (${res.status})`);
       const data = await res.json();
@@ -255,19 +246,8 @@ async function loadWeather() {
 // 뉴스
 async function loadNews() {
   const el = document.getElementById("news-list");
-  const isLocal = location.hostname === "localhost" || location.hostname === "127.0.0.1";
-
-  // NewsAPI 무료(Developer) 플랜은 브라우저에서의 직접 호출을 localhost에서만 허용한다.
-  // localhost가 아니면(배포 환경) /api/news 서버리스 프록시를 거쳐 CORS 제한을 우회한다.
-  if (isLocal && (!NEWSAPI_KEY || NEWSAPI_KEY.startsWith("여기에"))) {
-    el.innerHTML = `<li class="error">NewsAPI 키가 설정되지 않았습니다. index.html 상단의 NEWSAPI_KEY 값을 채워주세요.</li>`;
-    return;
-  }
   try {
-    const url = isLocal
-      ? `https://newsapi.org/v2/everything?q=%EC%86%8C%EC%8B%9D&language=ko&sortBy=publishedAt&pageSize=10&apiKey=${NEWSAPI_KEY}`
-      : "/api/news";
-    const res = await fetch(url);
+    const res = await fetch("/api/news");
     if (!res.ok) throw new Error(`뉴스 API 오류 (${res.status})`);
     const data = await res.json();
 

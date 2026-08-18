@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "static-preview",
-      "runtimeExecutable": "python",
-      "runtimeArgs": ["-m", "http.server", "8532"],
+      "runtimeExecutable": "vercel",
+      "runtimeArgs": ["dev", "--listen", "8532"],
       "port": 8532
     }
   ]
